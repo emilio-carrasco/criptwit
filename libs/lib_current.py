@@ -9,6 +9,7 @@ def read_currencies(file_):
     This function read a txt from its path and return a dictionary with names and symbols of cripto currencies.
     file_: pacth to the txt file
 
+    return dict {symbol:name}
     """
     try:
         dict_ = dict()
@@ -29,11 +30,20 @@ def appears(x, set_):
     this function returns boolean if x in in set_ comparing lower cases
     x:string
     set_: set of strings
+
+    returns:boolean
     """
     set_lower=set([element.lower() for element in list(set_)])
     return x.lower() in set_lower
 
 def sub_current(df,dict_):
+    """
+    this funcion takes a df and crates a dictionary with subdta frames of every cripto current
+    df: datafram
+    dict_: dictionary with {symbol:name} of criptcurrencies
+
+    return: dictionary {<name_currency>:<subdata_frame>}
+    """
     df_sub=dict()
     for symbol, name  in dict_.items():
         columns_=list(df.columns[:-1])
@@ -78,6 +88,11 @@ def consult_api(name, vs_, ut,b_a):
 
 def current_prices_df(df,name,vs_):
     """
+    this function add before and after columns in df and consults API for the price vs our currency
+
+    df: dataframe
+    name: criptcurrency name to consult
+    vs_: currency to compare with
 
     """
 
