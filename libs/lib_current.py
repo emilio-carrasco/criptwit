@@ -75,7 +75,7 @@ def consult_api(name, vs_, ut, b_a):
 
     """
     hour_ut = 3600
-    num_hours = 6
+    num_hours = 72
     interval = hour_ut * num_hours
     
     if b_a == 'before':
