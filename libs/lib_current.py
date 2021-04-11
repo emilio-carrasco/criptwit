@@ -47,8 +47,8 @@ def sub_current(df,dict_):
     df_sub=dict()
     for symbol, name  in dict_.items():
         columns_=list(df.columns[:-1])
-        
-        df_sub[name] = df[df.MATCHING.apply(lambda set_currencies:appears(name,set_currencies))][columns_]
+        df_aux= df[df.MATCHING.apply(lambda set_currencies:appears(name,set_currencies))][columns_]
+        df_sub[name]=df_aux.reset_index(drop=True)
     return df_sub
 
 def currencies_prices(dict_df, vs_):
@@ -63,7 +63,8 @@ def currencies_prices(dict_df, vs_):
 
     return dict_df
 
-def consult_api(name, vs_, ut,b_a):
+def consult_api(name, vs_, ut, b_a):
+
     """
     returs a miutely list for the name of the currency with price and utc
     name: strin currency name
@@ -78,13 +79,22 @@ def consult_api(name, vs_, ut,b_a):
     interval = hour_ut * num_hours
     
     if b_a == 'before':
-        from_= int(ut - interval)
+        from_ = int(ut - interval)
         to_ = int(ut)
     elif b_a == 'after':
-        from_= int(ut)
+        from_ = int(ut)
         to_ = int(ut + interval)
-    
-    return cg.get_coin_market_chart_range_by_id(name, vs_, from_, to_)['prices']
+    prices = cg.get_coin_market_chart_range_by_id(name, vs_, from_, to_)['prices']
+    if not prices:
+        prices = None
+    return prices
+
+def dict_price_ut(list_):
+    ut_ = [l[0] for l in list_]
+    price_ = [l[1] for l in list_]
+    dict_ = {'ut': ut_, 'price': price_}
+    return dict_
+
 
 def current_prices_df(df,name,vs_):
     """
@@ -95,9 +105,18 @@ def current_prices_df(df,name,vs_):
     vs_: currency to compare with
 
     """
-
-    df['before']=df.UT
-    df['after']=df.UT
-    df.before=df.before.apply(lambda x:consult_api(name,vs_,x,'before'))
-    df.after=df.after.apply(lambda x:consult_api(name,vs_,x,'after'))
+    
+    df['before'] = df.UT
+    df['after'] = df.UT
+    
+    df.before = df.before.apply(lambda x:consult_api(name, vs_, x, 'before'))
+    
+    df.after = df.after.apply(lambda x:consult_api(name, vs_,x, 'after'))
+    
+    df.dropna(subset=['before', 'after'],inplace=True)
+    df.reset_index(inplace=True)
+    df.before = df.before.apply(dict_price_ut)
+    
+    df.after = df.after.apply(dict_price_ut)
+ 
     return df

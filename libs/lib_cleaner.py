@@ -7,7 +7,7 @@ from lib_current import sub_current
 
 def twcleaner(df, lista_columnas, dict_currency):
     """
-    This function takes twwet data frame and return a clean dictionary with every current 
+    This function takes tweet data frame and return a clean dictionary with every current 
     and its subdata frame
     df: data frame de pandas
     lista de columnas: lista de strings
