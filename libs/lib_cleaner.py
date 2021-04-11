@@ -3,17 +3,15 @@ import re
 import lib_ini
 import time
 import datetime
-
+from lib_current import sub_current
 
 def twcleaner(df, lista_columnas, dict_currency):
     """
-    Esa función recoge una data frame. De él se quedará con las columnas contenidad en la lista de columnas
-    Quedará con las palabras contenidas en la 'lista_palabras'
-    Añadirá además tantas columnas como "lista_palabras" con valor booleano para indicar qué palabras aparecen en ese tweet
-
+    This function takes twwet data frame and return a clean dictionary with every current 
+    and its subdata frame
     df: data frame de pandas
     lista de columnas: lista de strings
-    lista de palabras: lista de strings
+    dict_currency: dictionary {symbol:name}
 
     Devuelve df procesado
     """
@@ -23,29 +21,30 @@ def twcleaner(df, lista_columnas, dict_currency):
     
     df2.MATCHING=df2.MATCHING.apply(lambda x: is_a_word(dict_currency, x))
     df2.dropna(subset=['MATCHING'], inplace=True)
-    print(lista_columnas[1])
-    df2.sort_values(by=['date'])
+    df3 = df2.rename(columns={'created_at':'UT', 'date':'DATE','tweet':'TWEET'}, inplace = False)
+    return sub_current(df3,dict_currency)
 
-    return df2.rename(columns={'created_at':'UT', 'date':'DATE','tweet':'TWEET'}, inplace = False)
-   
-
-
-
-def is_a_word(dicc, x):
+def twt2set(twt):
     """
-    This function returns the sub list from list appearing in x
-    list: list if strings
-    x: string
-    """
-    x1 = (re.findall("[a-zA-Z]+", x))
-    x2={element.upper() for element in x1}
- 
-    matching= {c['name'] for c  in dicc  if (c['symbol'] in x2) or (c['name'] in x2) }
+    This functions takes a string replace a set with all the word only with chars in upper case
 
-   
+    twt: string
+    """
+    twt_char=(re.findall(r"[a-zA-Z]+", twt))
+    tw_char_set={char_.upper() for char_ in twt_char}
+    return tw_char_set
+
+def is_a_word(dict_, twt):
+    """
+    This function returns the set with the currents appearing in twt
+    dict_: dictionary of currencies {symbal:name}
+    twt:string
+    """
+    twt_set=twt2set(twt)
+    matching= {name for symbol,name  in dict_.items()  if (symbol.upper() in twt_set) or (name.upper() in twt_set) }
     if not matching:
         matching=None
-        
+    
     return matching
     
 

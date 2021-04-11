@@ -14,14 +14,5 @@ def read_batch_csv(start, end, lib):
         df=df.append(df_aux)
 
     return df
-def load_criptcurren(file_):
-    """
-    This funcion gets a file.txt and return a list with one line per element.
-    file: name or path for a txt file.
-    """
-    file_csv = open(file_, "r")
-    dicc =(DictReader(file_csv))
 
-    #ordered_dict_from_csv = list(dicc)[0]
-    #dict_from_csv = dict(ordered_dict_from_csv)
-    return dict(dicc)
+

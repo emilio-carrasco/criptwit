@@ -1,0 +1,10 @@
+BTC
+bitcoin
+ETH
+ethereum
+USDT
+tether
+ADA
+Cardano
+LTC
+Litecoin
