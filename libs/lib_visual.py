@@ -1,33 +1,27 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_intervals(before,after):
-    before_0=[b-before[0] for b in before]
-    after_0=[a-before[0] for a in after]
+def plot_intervals(before,after,i):
+    plt.figure(i)
     
-    plt.plot(before_0,color='red')
-    plt.plot(after_0,color='green')
+    a0=[a-after[0] for a in after]
+    b0=[b-before[0] for b in before]
+    plt.plot(a0,color='red')
+    plt.plot(b0,color='green')
+    return i+1
 
-
-
-
-
-def visual_currency(df,folder):
+def visual_currency(df,folder,i):
     (rows_,columns_) = df.shape  
     for r in range(rows_-1): 
-    
-
-        b=df.before[r]
-        a=df.after[r]
-
-        plot_intervals(b['price'],a['price'])
-
+        b = df.before[r]
+        a = df.after[r]
+        i= plot_intervals(b['price'],a['price'],i)
 
 def visual_criptwit(dict_,folder_):
-    i = 0
+    i=1
     for name, df  in dict_.items():
         if not df.empty:   
-            plt.figure(i)
-            plt.xlabel(name) 
-            visual_currency(df, folder_)
-            i+=1
+            
+            plt.xlabel(f"{name}") 
+            visual_currency(df, folder_,i)
+            

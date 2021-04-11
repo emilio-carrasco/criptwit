@@ -3,7 +3,7 @@ import re
 import lib_ini
 import time
 import datetime
-from lib_current import sub_current
+from lib_curren import sub_curren
 
 def twcleaner(df, lista_columnas, dict_currency):
     """
@@ -15,7 +15,6 @@ def twcleaner(df, lista_columnas, dict_currency):
 
     Devuelve df procesado
     """
-
     df2 = df[lista_columnas]
     df2['MATCHING'] = df2[lista_columnas[0]]
 
@@ -23,12 +22,11 @@ def twcleaner(df, lista_columnas, dict_currency):
     df2.dropna(subset=['MATCHING'], inplace=True)
     df3 = df2.rename(columns={'created_at':'UT', 'date':'DATE','tweet':'TWEET'}, inplace = False)
     df3.UT=df3.UT.apply(lambda x: round(x/1000))
-    return sub_current(df3,dict_currency)
+    return sub_curren(df3,dict_currency)
 
 def twt2set(twt):
     """
     This functions takes a string replace a set with all the word only with chars in upper case
-
     twt: string
     """
     twt_char=(re.findall(r"[a-zA-Z]+", twt))
@@ -45,7 +43,6 @@ def is_a_word(dict_, twt):
     matching= {name for symbol,name  in dict_.items()  if (symbol.upper() in twt_set) or (name.upper() in twt_set) }
     if not matching:
         matching=None
-    
     return matching
     
 

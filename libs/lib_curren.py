@@ -3,7 +3,6 @@ from pycoingecko import CoinGeckoAPI
 cg = CoinGeckoAPI()
 from time import sleep
 
-
 def read_currencies(file_):
     """
     This function read a txt from its path and return a dictionary with names and symbols of cripto currencies.
@@ -13,7 +12,7 @@ def read_currencies(file_):
     """
     try:
         dict_ = dict()
-        open_file=open(file_)
+        open_file = open(file_)
         symbol = open_file.readline()[:-1]
         name = open_file.readline()[:-1]
         while symbol:
@@ -33,10 +32,10 @@ def appears(x, set_):
 
     returns:boolean
     """
-    set_lower=set([element.lower() for element in list(set_)])
+    set_lower = set([element.lower() for element in list(set_)])
     return x.lower() in set_lower
 
-def sub_current(df,dict_):
+def sub_curren(df,dict_):
     """
     this funcion takes a df and crates a dictionary with subdta frames of every cripto current
     df: datafram
@@ -44,27 +43,24 @@ def sub_current(df,dict_):
 
     return: dictionary {<name_currency>:<subdata_frame>}
     """
-    df_sub=dict()
+    df_sub = dict()
     for symbol, name  in dict_.items():
-        columns_=list(df.columns[:-1])
-        df_aux= df[df.MATCHING.apply(lambda set_currencies:appears(name,set_currencies))][columns_]
-        df_sub[name]=df_aux.reset_index(drop=True)
+        columns_ = list(df.columns[:-1])
+        df_aux = df[df.MATCHING.apply(lambda set_currencies:appears(name, set_currencies))][columns_]
+        df_sub[name] = df_aux.drop_duplicates().reset_index(drop=True)
     return df_sub
 
 def currencies_prices(dict_df, vs_):
     """
-    takes a dict of data frames wwith all the subsets and adds current values
+    takes a dict of data frames with all the subsets and adds current values
     
     """
     for name,df  in dict_df.items():        
         if not df.empty:
-            dict_df[name]=current_prices_df(df,name,vs_)
-            
-
+            dict_df[name] = curren_prices_df(df, name,vs_)
     return dict_df
 
 def consult_api(name, vs_, ut, b_a):
-
     """
     returs a miutely list for the name of the currency with price and utc
     name: strin currency name
@@ -81,12 +77,16 @@ def consult_api(name, vs_, ut, b_a):
     if b_a == 'before':
         from_ = int(ut - interval)
         to_ = int(ut)
+
     elif b_a == 'after':
         from_ = int(ut)
         to_ = int(ut + interval)
+
     prices = cg.get_coin_market_chart_range_by_id(name, vs_, from_, to_)['prices']
+
     if not prices:
         prices = None
+
     return prices
 
 def dict_price_ut(list_):
@@ -96,7 +96,7 @@ def dict_price_ut(list_):
     return dict_
 
 
-def current_prices_df(df,name,vs_):
+def curren_prices_df(df,name,vs_):
     """
     this function add before and after columns in df and consults API for the price vs our currency
 
@@ -113,10 +113,10 @@ def current_prices_df(df,name,vs_):
     
     df.after = df.after.apply(lambda x:consult_api(name, vs_,x, 'after'))
     
-    df.dropna(subset=['before', 'after'],inplace=True)
-    df.reset_index(inplace=True)
+    df.dropna(subset=['before', 'after'], inplace=True)
+    df.reset_index(inplace=True, drop=True)
+
     df.before = df.before.apply(dict_price_ut)
     
     df.after = df.after.apply(dict_price_ut)
- 
     return df

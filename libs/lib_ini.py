@@ -1,7 +1,6 @@
 import pandas as pd
 from csv import DictReader
 
-
 def read_batch_csv(start, end, lib):
     """
     this function reads csv files name XXXX.csv from xxxx=strat to end in the 'lib' folder from actual path
@@ -12,7 +11,6 @@ def read_batch_csv(start, end, lib):
     for file in range(start + 1, end + 1):
         df_aux = pd.read_csv(lib + str(file) + '.csv')
         df=df.append(df_aux)
-
     return df
 
 
