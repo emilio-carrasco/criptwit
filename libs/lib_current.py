@@ -48,20 +48,41 @@ def currencies_prices(dict_df, vs_):
     """
     for name,df  in dict_df.items():        
         if not df.empty:
-            df[name]=current_prices_df('before','after',df,name)
+            dict_df[name]=current_prices_df(df,name,vs_)
+            
 
-def consult_api(name,vs_,from_, to_):
-    return cg.get_coin_market_chart_range_by_id(name, vs_, from_, to_)
+    return dict_df
 
-def current_prices_df(before,after,df,name):
+def consult_api(name, vs_, ut,b_a):
     """
+    returs a miutely list for the name of the currency with price and utc
+    name: strin currency name
+    
+    vs_: currency name to exchange with
+    ut: unix time of twt
+    b_a='before' or 'after'
+
     """
     hour_ut = 3600
     num_hours = 6
-    intervale = hour_ut * num_hours
-    from_= x - interval
-    to_ = x - intervale
-    df[before]=df.ut
-    df[after]=df.ut
-    df.before=df.befor.appy(lambda x:consult_api(name,vs_,from_, x))
-    df.after=df.after.appy(lambda x:consult_api(name,vs_,x, to_))
+    interval = hour_ut * num_hours
+    
+    if b_a == 'before':
+        from_= int(ut - interval)
+        to_ = int(ut)
+    elif b_a == 'after':
+        from_= int(ut)
+        to_ = int(ut + interval)
+    
+    return cg.get_coin_market_chart_range_by_id(name, vs_, from_, to_)['prices']
+
+def current_prices_df(df,name,vs_):
+    """
+
+    """
+
+    df['before']=df.UT
+    df['after']=df.UT
+    df.before=df.before.apply(lambda x:consult_api(name,vs_,x,'before'))
+    df.after=df.after.apply(lambda x:consult_api(name,vs_,x,'after'))
+    return df

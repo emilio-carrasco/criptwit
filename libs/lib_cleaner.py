@@ -18,10 +18,11 @@ def twcleaner(df, lista_columnas, dict_currency):
 
     df2 = df[lista_columnas]
     df2['MATCHING'] = df2[lista_columnas[0]]
-    
+
     df2.MATCHING=df2.MATCHING.apply(lambda x: is_a_word(dict_currency, x))
     df2.dropna(subset=['MATCHING'], inplace=True)
     df3 = df2.rename(columns={'created_at':'UT', 'date':'DATE','tweet':'TWEET'}, inplace = False)
+    df3.UT=df3.UT.apply(lambda x: round(x/1000))
     return sub_current(df3,dict_currency)
 
 def twt2set(twt):
