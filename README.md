@@ -17,7 +17,7 @@ Se ha desarrollado en lenguaje python y hemos requerido de las siguientes librer
 · matplotlib.pyplot
 
 ## Descripción
-El código principal corre desde criptiwt.py y hace diferentes llamadas a las librerías propias siguientes:
+El código principal corre desde criptiwt.py. No solicita ningún parámetro. Para cambiar las monedas usar el documento de texto en src. Hace diferentes llamadas a las librerías propias siguientes:
 
 · lib_ini: para la inicialización del programa.
 · lib_cleaner: para la limpieza del DF.

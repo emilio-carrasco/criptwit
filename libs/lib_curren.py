@@ -1,4 +1,3 @@
-
 from pycoingecko import CoinGeckoAPI
 cg = CoinGeckoAPI()
 from time import sleep
