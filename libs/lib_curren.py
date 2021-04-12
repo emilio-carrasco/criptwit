@@ -17,7 +17,6 @@ def read_currencies(file_):
         name = open_file.readline()[:-1]
         while symbol:
             dict_[symbol] = name
-            
             symbol = open_file.readline()[:-1]
             name = open_file.readline()[:-1]
         return dict_
@@ -57,10 +56,37 @@ def currencies_prices(dict_df, vs_):
     """
     for name,df  in dict_df.items():        
         if not df.empty:
-            dict_df[name] = curren_prices_df(df, name,vs_)
+            dict_df[name] = before_after_prices_df(df, name,vs_)
     return dict_df
 
-def consult_api(name, vs_, ut, b_a):
+def before_after_prices_df(df,name,vs_):
+    """
+    this function add before and after columns in df and consults API for the price vs our currency
+
+    df: dataframe
+    name: criptcurrency name to consult
+    vs_: currency to compare with
+
+    """
+    df['prices'] = df.UT
+    df.prices = df.prices.apply(lambda x:consult_api_price(name, vs_, x))
+    df.dropna(subset=['prices'], inplace=True)
+    (df)
+    #df['before'] = df.UT
+    #df['after'] = df.UT
+    
+    #df.before = df.before.apply(lambda x:consult_api(name, vs_, x, 'before'))
+    #df.after = df.after.apply(lambda x:consult_api(name, vs_,x, 'after'))
+    
+    #df.dropna(subset=['before', 'after'], inplace=True)
+    df.reset_index(inplace=True, drop=True)
+
+    #df.before = df.before.apply(dict_price_ut)
+    #df.after = df.after.apply(dict_price_ut)
+
+    return df
+
+def consult_api_price(name, vs_, ut):
     """
     returs a miutely list for the name of the currency with price and utc
     name: strin currency name
@@ -68,8 +94,42 @@ def consult_api(name, vs_, ut, b_a):
     vs_: currency name to exchange with
     ut: unix time of twt
     b_a='before' or 'after'
-
     """
+    
+    hour_ut = 3600
+    num_hours = 72
+    interval = hour_ut * num_hours
+    
+    from_before = int(ut - interval)
+    to_before = int(ut)
+
+    from_after = int(ut)
+    to_after = int(ut + interval)
+
+    #sleep(0.5)
+    before = cg.get_coin_market_chart_range_by_id(name.lower(), vs_, from_before, to_before)['prices']
+    #sleep(0.5)
+    after = cg.get_coin_market_chart_range_by_id(name.lower(), vs_, from_after, to_after)['prices']
+    
+    price_before = [b[1] for b in before]
+    price_after= [a[1] for a in after]
+
+    if not price_before or not price_before  or (len(price_before) < 10) or (len(price_after) < 10):
+        return None
+    else: 
+        return {'before':price_before,'after':price_after}
+
+"""
+def consult_api(name, vs_, ut, b_a):
+    
+    returs a miutely list for the name of the currency with price and utc
+    name: strin currency name
+    
+    vs_: currency name to exchange with
+    ut: unix time of twt
+    b_a='before' or 'after'
+
+    
     hour_ut = 3600
     num_hours = 72
     interval = hour_ut * num_hours
@@ -88,35 +148,13 @@ def consult_api(name, vs_, ut, b_a):
         prices = None
 
     return prices
+"""
 
+"""
 def dict_price_ut(list_):
     ut_ = [l[0] for l in list_]
     price_ = [l[1] for l in list_]
     dict_ = {'ut': ut_, 'price': price_}
     return dict_
+"""
 
-
-def curren_prices_df(df,name,vs_):
-    """
-    this function add before and after columns in df and consults API for the price vs our currency
-
-    df: dataframe
-    name: criptcurrency name to consult
-    vs_: currency to compare with
-
-    """
-    
-    df['before'] = df.UT
-    df['after'] = df.UT
-    
-    df.before = df.before.apply(lambda x:consult_api(name, vs_, x, 'before'))
-    
-    df.after = df.after.apply(lambda x:consult_api(name, vs_,x, 'after'))
-    
-    df.dropna(subset=['before', 'after'], inplace=True)
-    df.reset_index(inplace=True, drop=True)
-
-    df.before = df.before.apply(dict_price_ut)
-    
-    df.after = df.after.apply(dict_price_ut)
-    return df
