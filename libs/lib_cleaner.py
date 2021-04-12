@@ -49,6 +49,7 @@ def is_a_word(dict_, twt):
 
 def time2unix(time_string):
     """     
+    NOT USED IN THIS PROJECT FINALLY
     This function takes a YYYY-MM-DD HH:MM:SS format into unix format
 
     time string in YYYY-MM-DD HH:MM:SS FORMAT
@@ -57,6 +58,8 @@ def time2unix(time_string):
 
 def unix_column(df,string_):
     """
+    NOT USED IN THIS PROJECT FINALLY
+
     This functions takes a df expecting its column 'string_' is in YYYY-MM-DD HH:MM:SS 
     and turns it into UNIX format
 
