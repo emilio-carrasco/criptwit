@@ -2,6 +2,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.rcParams.update({'figure.max_open_warning': 0})
+plt.rcParams.update({'figure.autolayout': True})
 
 def plot_currency(dict_, plt):
     """
@@ -40,7 +41,7 @@ def plot_percent(dict_, folder_):
                 plt.xlabel('Date - time of the twitter')
                 df.percent_higher.plot.bar()
                 plt.axhline(0, color="k")
-                ax.set_xticklabels(labels, rotation = 45)
+                ax.set_xticklabels(labels, rotation = 30)
                 plt.savefig(f"{folder_}Percent-above-{name}.png", transparent=False)
 
         
@@ -59,6 +60,5 @@ def visual_criptwit(dict_, folder_):
                 f, ax = plt.subplots(figsize=[12,8])
                 plt.title(f"{name} {df.DATE[i]}")
                 plot_currency(df.prices[i],plt)
-                plt.text(0, 30, f"{df.percent_higher[i]} %", color='black', bbox=dict(facecolor='green', alpha=0.3, edgecolor='black', boxstyle='round,pad=1'), fontsize=15)
                 plt.savefig(f"{folder_}{name}-{df.DATE[i].strip()}.png", transparent=False)
             

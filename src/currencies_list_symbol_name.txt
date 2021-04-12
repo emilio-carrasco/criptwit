@@ -1,10 +1,4 @@
 BTC
 bitcoin
 ETH
-Ethereum
-USDT
-tether
-ADA
-Cardano
-LTC
-Litecoin
+ethereum

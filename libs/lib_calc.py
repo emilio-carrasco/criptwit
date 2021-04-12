@@ -29,6 +29,7 @@ def calculus(dict_):
     """
     for name, df  in dict_.items():
         if not df.empty: 
+            print(name)
             df['percent_higher']=df['prices']
             df.percent_higher=df.percent_higher.apply(calc_percent)
     return dict_
