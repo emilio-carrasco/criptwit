@@ -1,7 +1,6 @@
-import matplotlib.pyplot as plt
 
 import pandas as pd
-
+import matplotlib.pyplot as plt
 plt.rcParams.update({'figure.max_open_warning': 0})
 
 def plot_currency(dict_, plt):
@@ -36,13 +35,13 @@ def plot_percent(dict_, folder_):
             if not df.empty: 
                 df = df.sort_values(by=['DATE'])    
                 labels = list(df.DATE)
-                fig, ax = plt.subplots(constrained_layout=True, figsize=[12,8])
+                fig, ax = plt.subplots(figsize=[12,8])
                 plt.title(f"{name} - % After above before twit")
                 plt.xlabel('Date - time of the twitter')
                 df.percent_higher.plot.bar()
                 plt.axhline(0, color="k")
                 ax.set_xticklabels(labels, rotation = 45)
-                plt.savefig(f"{folder_}Percent-above{name}.png", transparent=False)
+                plt.savefig(f"{folder_}Percent-above-{name}.png", transparent=False)
 
         
 
@@ -57,9 +56,9 @@ def visual_criptwit(dict_, folder_):
             (rows, columns) = df.shape
             for i in range(rows-1):
                 plt.figure()
-                f, ax = plt.subplots(constrained_layout=True, figsize=[12,8])
+                f, ax = plt.subplots(figsize=[12,8])
                 plt.title(f"{name} {df.DATE[i]}")
                 plot_currency(df.prices[i],plt)
-                plt.savefig(f"{folder_}{name}{df.DATE[i].strip()}.png", transparent=False)
                 plt.text(0, 30, f"{df.percent_higher[i]} %", color='black', bbox=dict(facecolor='green', alpha=0.3, edgecolor='black', boxstyle='round,pad=1'), fontsize=15)
+                plt.savefig(f"{folder_}{name}-{df.DATE[i].strip()}.png", transparent=False)
             
