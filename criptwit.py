@@ -31,12 +31,12 @@ print("- DB ok\n")
 
 
 # Read csv and merge it all
-print("Readin csv.")
+print("Reading csv.")
 df = read_batch_csv(2010, 2021, './data/')
 print("-csv ok\n")
 
 #Read currencies from .txt
-print("Readin currencies file.")
+print("Reading currencies file.")
 currencies = read_currencies('./src/currencies_list_symbol_name.txt') 
 print("-Currencies file ok\n")
 

@@ -9,7 +9,7 @@ def plot_currency(dict_, plt):
     This function revices a dict whit prices before and after the twit and prints its figure
 
     dict_: dictionary
-
+s
     plt: figure handler 
     """
     before=dict_['before']
