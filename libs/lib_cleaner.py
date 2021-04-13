@@ -2,7 +2,7 @@ import pandas as pd
 import re
 import lib_ini
 import time
-import datetime
+import datetime  #not necessary
 from lib_curren import sub_curren
 
 def twcleaner(df, lista_columnas, dict_currency):
